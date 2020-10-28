@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Restponder">
+            <directory suffix="Test.php">tests/</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <junit outputFile="tests/build/report.junit.xml"/>
+        <testdoxHtml outputFile="tests/build/coverage.html"/>
+        <testdoxText outputFile="tests/build/coverage.txt"/>
+        <testdoxXml outputFile="tests/build/clover.xml"/>
+    </logging>
+</phpunit>

@@ -1,0 +1,44 @@
+{
+    "name": "laurynasgadl/restponder-php",
+    "type": "library",
+    "description": "REST API response data builder",
+    "keywords": [
+        "php",
+        "rest",
+        "api",
+        "response",
+        "builder"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Laurynas Gadliauskas",
+            "homepage": "https://github.com/laurynasgadl"
+        }
+    ],
+    "require": {
+        "php": ">=7.3",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Luur\\Restponder\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Luur\\Restponder\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
