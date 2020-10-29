@@ -6,7 +6,7 @@ namespace Luur\Restponder\Tests;
 
 use Exception;
 use Luur\Restponder\ErrorData;
-use Luur\Restponder\Response;
+use Luur\Restponder\ResponseContent;
 use Luur\Restponder\Restponder;
 use PHPUnit\Framework\TestCase;
 
@@ -20,9 +20,9 @@ class RestponderTest extends TestCase
 
     public function test_builds_response()
     {
-        $response = Restponder::response(true);
+        $response = Restponder::content(true);
 
-        self::assertInstanceOf(Response::class, $response);
+        self::assertInstanceOf(ResponseContent::class, $response);
         self::assertTrue($response->getResult());
         self::assertTrue($response->isSuccess());
         self::assertNull($response->getError());
@@ -63,12 +63,12 @@ class RestponderTest extends TestCase
 
     public function test_registers_response_handler()
     {
-        $response = new Response(true);
-        Restponder::registerResponseHandler(Response::class, function (Response $variable, Response $response) {
+        $response = new ResponseContent(true);
+        Restponder::registerResponseHandler(ResponseContent::class, function (ResponseContent $variable, ResponseContent $response) {
             $response->setError($variable->getResult());
         });
 
-        $handled = new Response($response);
+        $handled = new ResponseContent($response);
 
         self::assertFalse($handled->isSuccess());
     }
@@ -90,7 +90,7 @@ class RestponderTest extends TestCase
         Restponder::setErrorDefaultCode(987);
         Restponder::setErrorDefaultMessage('test default message');
         Restponder::setErrorIncludeDebug(true);
-        Restponder::registerResponseHandler(Response::class, function (Response $variable, Response $response) {
+        Restponder::registerResponseHandler(ResponseContent::class, function (ResponseContent $variable, ResponseContent $response) {
             $response->setError($variable->getResult());
         });
         Restponder::registerErrorHandler(Exception::class, function (Exception $exception, ErrorData $error) {
@@ -98,7 +98,7 @@ class RestponderTest extends TestCase
         });
         Restponder::reset();
 
-        $handled   = new Response(new Response(true));
+        $handled   = new ResponseContent(new ResponseContent(true));
         $exception = new Exception('test exception', 987);
         $error     = new ErrorData($exception);
 

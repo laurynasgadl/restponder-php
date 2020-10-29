@@ -6,11 +6,11 @@ namespace Luur\Restponder\Tests;
 
 use Exception;
 use Luur\Restponder\ErrorData;
-use Luur\Restponder\Response;
+use Luur\Restponder\ResponseContent;
 use Luur\Restponder\Restponder;
 use PHPUnit\Framework\TestCase;
 
-class ResponseTest extends TestCase
+class ResponseContentTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -20,25 +20,25 @@ class ResponseTest extends TestCase
 
     public function test_creates_object_from_null()
     {
-        $response = new Response();
+        $response = new ResponseContent();
 
-        self::assertInstanceOf(Response::class, $response);
+        self::assertInstanceOf(ResponseContent::class, $response);
         self::assertTrue($response->isSuccess());
         self::assertNull($response->getResult());
         self::assertNull($response->getError());
-        self::assertArrayNotHasKey(Response::METADATA_FIELD, $response->toArray());
+        self::assertArrayNotHasKey(ResponseContent::METADATA_FIELD, $response->toArray());
     }
 
     public function test_creates_object_from_exception()
     {
         $exception = new Exception('test exception', 987);
 
-        $response = new Response($exception);
+        $response = new ResponseContent($exception);
 
         self::assertFalse($response->isSuccess());
         self::assertNull($response->getResult());
         self::assertInstanceOf(ErrorData::class, $response->getErrorObject());
-        self::assertArrayNotHasKey(Response::METADATA_FIELD, $response->toArray());
+        self::assertArrayNotHasKey(ResponseContent::METADATA_FIELD, $response->toArray());
     }
 
     public function resultVariableDataProvider(): array
@@ -60,7 +60,7 @@ class ResponseTest extends TestCase
      */
     public function test_creates_object_from_variable($variable)
     {
-        $response = new Response($variable);
+        $response = new ResponseContent($variable);
 
         $requestId = 'abcdefg';
         $response->addMetadata('request_id', $requestId);
@@ -74,26 +74,33 @@ class ResponseTest extends TestCase
     public function test_creates_object_from_custom_class()
     {
         $custom  = new Exception('test custom', 987);
-        $handler = function (Exception $exception, Response $data) {
+        $handler = function (Exception $exception, ResponseContent $data) {
             $data->setResult($exception->getCode().$exception->getMessage());
             $data->setMetadata(['test' => true]);
         };
 
-        Response::registerHandler(get_class($custom), $handler);
+        ResponseContent::registerHandler(get_class($custom), $handler);
 
-        $response = new Response($custom);
+        $response = new ResponseContent($custom);
 
         self::assertTrue($response->isSuccess());
         self::assertEquals($custom->getCode().$custom->getMessage(), $response->getResult());
-        self::assertArrayHasKey(Response::METADATA_FIELD, $response->toArray());
-        self::assertEquals(['test' => true], $response->toArray()[Response::METADATA_FIELD]);
+        self::assertArrayHasKey(ResponseContent::METADATA_FIELD, $response->toArray());
+        self::assertEquals(['test' => true], $response->toArray()[ResponseContent::METADATA_FIELD]);
     }
 
     public function test_encodes_in_json()
     {
-        $result = new Response(new Exception('test exception', 987));
+        $result = new ResponseContent(new Exception('test exception', 987));
 
         self::assertEquals('{"success":false,"result":null,"error":{"code":987,"message":"test exception"}}',
             json_encode($result));
+    }
+
+    public function test_converts_to_string()
+    {
+        $result = new ResponseContent(new Exception('test exception', 987));
+
+        self::assertEquals('{"success":false,"result":null,"error":{"code":987,"message":"test exception"}}', (string) $result);
     }
 }

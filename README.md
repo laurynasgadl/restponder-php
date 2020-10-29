@@ -7,7 +7,7 @@ Build a better REST API response.
 ```php
 use Luur\Restponder\Restponder;
 
-$response = Restponder::response('happy little 🌳');
+$response = Restponder::content('happy little 🌳');
 ```
 ```json
 {
@@ -21,7 +21,7 @@ $response = Restponder::response('happy little 🌳');
 ```php
 use Luur\Restponder\Restponder;
 
-$response = Restponder::response('happy little 🌳');
+$response = Restponder::content('happy little 🌳');
 $response->addMetadata('request_id', '1234-5678');
 ```
 ```json
@@ -39,7 +39,7 @@ $response->addMetadata('request_id', '1234-5678');
 ```php
 use Luur\Restponder\Restponder;
 
-$response = Restponder::response(new Exception('Oops', 987));
+$response = Restponder::content(new Exception('Oops', 987));
 ```
 ```json
 {
@@ -57,7 +57,7 @@ $response = Restponder::response(new Exception('Oops', 987));
 use Luur\Restponder\Restponder;
 
 Restponder::setErrorIncludeDebug(true);
-$response = Restponder::response(new Exception('Oops', 987));
+$response = Restponder::content(new Exception('Oops', 987));
 ```
 ```json
 {
@@ -84,7 +84,7 @@ $handler = function (Exception $exception, ErrorData $data) {
 };
 
 Restponder::registerErrorHandler(Exception::class, $handler);
-$response = Restponder::response(new Exception('Oops', 987));
+$response = Restponder::content(new Exception('Oops', 987));
 ```
 ```json
 {
@@ -108,10 +108,10 @@ You can register a custom object handler, to be able to parse response data
 from any kind of object, however you like.
 
 ```php
-use Luur\Restponder\Response;
+use Luur\Restponder\ResponseContent;
 use Luur\Restponder\Restponder;
 
-$handler = function (Exception $exception, Response $response) {
+$handler = function (Exception $exception, ResponseContent $response) {
     $response->addMetadata('failed', true);
     $response->addMetadata('error_message', $exception->getMessage());
 };

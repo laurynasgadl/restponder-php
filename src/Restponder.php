@@ -8,9 +8,9 @@ use Closure;
 
 class Restponder
 {
-    public static function response($response): Response
+    public static function content($response): ResponseContent
     {
-        return new Response($response);
+        return new ResponseContent($response);
     }
 
     public static function setErrorDefaultCode(int $code): void
@@ -30,7 +30,7 @@ class Restponder
 
     public static function registerResponseHandler(string $className, Closure $handler)
     {
-        Response::registerHandler($className, $handler);
+        ResponseContent::registerHandler($className, $handler);
     }
 
     public static function registerErrorHandler(string $className, Closure $handler)
@@ -40,7 +40,7 @@ class Restponder
 
     public static function reset(): void
     {
-        Response::resetHandlers();
+        ResponseContent::resetHandlers();
         ErrorData::resetOptions();
     }
 }

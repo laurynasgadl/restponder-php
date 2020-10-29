@@ -4,10 +4,11 @@
 namespace Luur\Restponder;
 
 
+use Exception;
 use JsonSerializable;
 use Throwable;
 
-class Response implements JsonSerializable
+class ResponseContent implements JsonSerializable
 {
     use HasCustomHandlers;
 
@@ -105,5 +106,14 @@ class Response implements JsonSerializable
     public function jsonSerialize(): array
     {
         return $this->toArray();
+    }
+
+    public function __toString(): string
+    {
+        try {
+            return json_encode($this->jsonSerialize());
+        } catch (Exception $exception) {
+            return '';
+        }
     }
 }
